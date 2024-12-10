@@ -1,21 +1,63 @@
 import { NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
+import { getServerSession } from 'next-auth'
 
 const prisma = new PrismaClient()
 
+async function getUserFromSession() {
+  const session = await getServerSession()
+  if (!session?.user?.email) {
+    return null
+  }
+  return prisma.user.findUnique({
+    where: { email: session.user.email }
+  })
+}
+
 export async function GET(request: Request, { params }: { params: { id: string } }) {
-  const task = await prisma.task.findUnique({ where: { id: params.id } })
+  const user = await getUserFromSession()
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const task = await prisma.task.findFirst({
+    where: {
+      id: params.id,
+      userId: user.id
+    }
+  })
   return NextResponse.json(task)
 }
 
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
+  const user = await getUserFromSession()
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
   const data = await request.json()
-  const task = await prisma.task.update({ where: { id: params.id }, data })
+  const task = await prisma.task.updateMany({
+    where: {
+      id: params.id,
+      userId: user.id
+    },
+    data
+  })
   return NextResponse.json(task)
 }
 
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
-  await prisma.task.delete({ where: { id: params.id } })
+  const user = await getUserFromSession()
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  await prisma.task.deleteMany({
+    where: {
+      id: params.id,
+      userId: user.id
+    }
+  })
   return NextResponse.json({ message: 'Task deleted' })
 }
 

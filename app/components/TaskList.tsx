@@ -20,7 +20,6 @@ export default function TaskList({ onTasksChange }: { onTasksChange?: () => void
     status: '',
     dueDate: ''
   })
-  const router = useRouter()
 
   useEffect(() => {
     fetchTasks()
