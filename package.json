@@ -12,8 +12,9 @@
     "postinstall": "npx prisma generate"
   },
   "dependencies": {
+    "@prisma/client": "^4.x.x",
+    "prisma": "^4.x.x",
     "@auth/prisma-adapter": "^2.7.4",
-    "@prisma/client": "^6.0.1",
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
