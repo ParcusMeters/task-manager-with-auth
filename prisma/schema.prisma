@@ -1,12 +1,12 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  provider  = "postgresql"
+  url       = "postgresql://neondb_owner:X3EH0MnykPgz@ep-muddy-heart-a7naroyn-pooler.ap-southeast-2.aws.neon.tech/neondb?sslmode=require"
+  directUrl = "postgresql://neondb_owner:X3EH0MnykPgz@ep-muddy-heart-a7naroyn-pooler.ap-southeast-2.aws.neon.tech/neondb?sslmode=require" // uses a direct connection
 }
 
 model Task {
